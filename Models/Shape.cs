@@ -1,19 +1,23 @@
-﻿namespace Polygons.Models;
+﻿using Avalonia.Media;
+
+namespace Polygons.Models;
 
 public abstract class Shape
 {
     protected int x, y;
-    static int r;
+    protected static int r;
+    protected Color color;
 
-    protected Shape(int x, int y)
+    protected Shape(int x, int y, Color color)
     {
         this.x = x;
         this.y = y;
+        this.color = color;
     }
 
     static Shape()
     {
-        r = 25;
+        r = 30;
     }
 
     public int X
@@ -27,4 +31,6 @@ public abstract class Shape
         get => y;
         set => y = value;
     }
+
+    public abstract void Draw(DrawingContext context);
 }

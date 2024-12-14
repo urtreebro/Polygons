@@ -66,3 +66,4 @@ C:\Users\Рената\RiderProjects\Polygons\obj\Debug\net8.0\refint\Avalonia\Po
 C:\Users\Рената\RiderProjects\Polygons\obj\Debug\net8.0\Polygons.csproj.Up2Date
 C:\Users\Рената\RiderProjects\Polygons\obj\Debug\net8.0\Polygons.genruntimeconfig.cache
 C:\Users\Рената\RiderProjects\Polygons\obj\Debug\net8.0\ref\Polygons.dll
+C:\Users\Рената\RiderProjects\Polygons\obj\Debug\net8.0\Polygons.sourcelink.json
