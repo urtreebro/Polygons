@@ -8,6 +8,11 @@ public sealed class Square : Shape
 {
     public Square(int x, int y, Color color) : base(x, y, color) { }
 
+    public override bool IsInside(int nx, int ny)
+    {
+        throw new NotImplementedException();
+    }
+
     public override void Draw(DrawingContext context)
     {
         Brush lineBrush = new SolidColorBrush(color);

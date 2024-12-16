@@ -8,6 +8,14 @@ public abstract class Shape
     protected static int r;
     protected Color color;
 
+    public bool IsMoving
+    {
+        get;
+        set;
+    }
+
+    public abstract bool IsInside(int nx, int ny);
+
     protected Shape(int x, int y, Color color)
     {
         this.x = x;

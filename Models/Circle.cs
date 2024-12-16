@@ -7,6 +7,11 @@ public sealed class Circle : Shape
 {
     public Circle(int x, int y, Color color) : base(x, y, color) { }
 
+    public override bool IsInside(int nx, int ny)
+    {
+        return (x - nx) * (x - nx) + (y - ny) * (y - ny) <= r * r;
+    }
+
     public override void Draw(DrawingContext context)
     {
         Brush brush = new SolidColorBrush(Colors.White);
