@@ -9,7 +9,7 @@ public sealed class Circle : Shape
 
     public override bool IsInside(int nx, int ny)
     {
-        return (x - nx) * (x - nx) + (y - ny) * (y - ny) <= r * r;
+        return (x - nx) * (x - nx) + (y - ny) * (y - ny) <= R * R;
     }
 
     public override void Draw(DrawingContext context)
@@ -17,6 +17,6 @@ public sealed class Circle : Shape
         Brush brush = new SolidColorBrush(Colors.White);
         Brush lineBrush = new SolidColorBrush(color);
         Pen pen = new(lineBrush, 2, lineCap: PenLineCap.Square);
-        context.DrawEllipse(brush, pen, new Point(x, y), r, r);
+        context.DrawEllipse(brush, pen, new Point(x, y), R, R);
     }
 }

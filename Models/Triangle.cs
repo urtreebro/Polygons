@@ -6,22 +6,36 @@ namespace Polygons.Models;
 
 public sealed class Triangle : Shape
 {
+    private Point _point1, _point2, _point3;
+    private static double Area => R * R * 0.25 * 3 * Math.Sqrt(3);
     public Triangle(int x, int y, Color color) : base(x, y, color) { }
 
     public override bool IsInside(int nx, int ny)
     {
-        throw new NotImplementedException();
+        var pointClick = new Point(nx, ny);
+        return Math.Abs(Area - HeronFormula(_point1, _point2, pointClick)
+                             - HeronFormula(_point1, _point3, pointClick)
+                             - HeronFormula(_point2, _point3, pointClick)) <= 0.1;
     }
 
     public override void Draw(DrawingContext context)
     {
         Brush lineBrush = new SolidColorBrush(color);
         Pen pen = new(lineBrush, 2, lineCap: PenLineCap.Square);
-        var point1 = new Point(x, y - r);
-        var point2 = new Point(x - r * (float)Math.Sqrt(3) / 2, y + (float)r / 2);
-        var point3 = new Point(x + r * (float)Math.Sqrt(3) / 2, y + (float)r / 2);
-        context.DrawLine(pen, point1, point2);
-        context.DrawLine(pen, point1, point3);
-        context.DrawLine(pen, point2, point3);
+        _point1 = new Point(x, y - R);
+        _point2 = new Point(x - R * (float)Math.Sqrt(3) / 2, y + (float)R / 2);
+        _point3 = new Point(x + R * (float)Math.Sqrt(3) / 2, y + (float)R / 2);
+        context.DrawLine(pen, _point1, _point2);
+        context.DrawLine(pen, _point1, _point3);
+        context.DrawLine(pen, _point2, _point3);
+    }
+
+    private static double HeronFormula(Point p1, Point p2, Point p3)
+    {
+        var a = Point.Distance(p1, p2);
+        var b = Point.Distance(p1, p3);
+        var c = Point.Distance(p2, p3);
+        var p = (a + b + c) / 2;
+        return Math.Sqrt(p * (p - a) * (p - b) * (p - c));
     }
 }

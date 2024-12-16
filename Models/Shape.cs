@@ -5,14 +5,10 @@ namespace Polygons.Models;
 public abstract class Shape
 {
     protected int x, y;
-    protected static int r;
+    protected static readonly int R;
     protected Color color;
 
-    public bool IsMoving
-    {
-        get;
-        set;
-    }
+    public bool IsMoving { get; set; }
 
     public abstract bool IsInside(int nx, int ny);
 
@@ -25,7 +21,7 @@ public abstract class Shape
 
     static Shape()
     {
-        r = 30;
+        R = 35;
     }
 
     public int X

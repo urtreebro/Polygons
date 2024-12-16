@@ -12,11 +12,11 @@
         PointerMoved="OnPointerMoved"
         PointerReleased="OnPointerReleased"
         Title="Polygons">
-    
+
     <Design.DataContext>
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
-    
+
     <Polygons:CustomControl Name="MyCustomControl"></Polygons:CustomControl>
 
 </Window>
