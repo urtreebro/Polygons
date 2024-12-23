@@ -5,7 +5,7 @@ namespace Polygons.Models;
 
 public sealed class Circle : Shape
 {
-    public Circle(int x, int y, Color color) : base(x, y, color) { }
+    public Circle(int x, int y) : base(x, y) { }
 
     public override bool IsInside(int nx, int ny)
     {
@@ -14,7 +14,7 @@ public sealed class Circle : Shape
 
     public override void Draw(DrawingContext context)
     {
-        Brush brush = new SolidColorBrush(Colors.White);
+        Brush brush = new SolidColorBrush();
         Brush lineBrush = new SolidColorBrush(color);
         Pen pen = new(lineBrush, 2, lineCap: PenLineCap.Square);
         context.DrawEllipse(brush, pen, new Point(x, y), R, R);

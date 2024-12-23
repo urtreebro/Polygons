@@ -8,7 +8,7 @@ public sealed class Triangle : Shape
 {
     private Point _point1, _point2, _point3;
     private static double Area => R * R * 0.25 * 3 * Math.Sqrt(3);
-    public Triangle(int x, int y, Color color) : base(x, y, color) { }
+    public Triangle(int x, int y) : base(x, y) { }
 
     public override bool IsInside(int nx, int ny)
     {

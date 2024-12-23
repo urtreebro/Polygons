@@ -13,7 +13,16 @@ public partial class MainWindow : Window
     private void OnPointerPressed(object sender, PointerPressedEventArgs e)
     {
         CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
-        customControl?.Click((int)e.GetPosition(customControl).X, (int)e.GetPosition(customControl).Y);
+        var point = e.GetCurrentPoint(sender as CustomControl);
+        if (point.Properties.IsLeftButtonPressed)
+        {
+            customControl?.LeftClick((int)e.GetPosition(customControl).X, (int)e.GetPosition(customControl).Y);
+        }
+
+        if (point.Properties.IsRightButtonPressed)
+        {
+            customControl?.RightClick((int)e.GetPosition(customControl).X, (int)e.GetPosition(customControl).Y);
+        }
     }
 
     private void OnPointerMoved(object? sender, PointerEventArgs e)
