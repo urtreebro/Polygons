@@ -5,7 +5,7 @@
 - [x] Drag and drop ✅
 - [x] Add figure by left click ✅
 - [x] Delete the last created figure by right click ✅
-- [ ] Change figure type in menu
+- [x] Change figure type in menu ✅
 - [ ] Make convex hull when there are at least 3 figures
 - [ ] Add several convex hull algorithms
 - [ ] Drag and drop for a convex hull

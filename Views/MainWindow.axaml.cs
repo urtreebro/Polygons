@@ -8,6 +8,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        Shapes.ItemsSource = new[] { "Circle", "Triangle", "Square" };
+        Shapes.SelectedIndex = 1;
     }
 
     private void OnPointerPressed(object sender, PointerPressedEventArgs e)
@@ -35,5 +37,13 @@ public partial class MainWindow : Window
     {
         CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
         customControl?.Release((int)e.GetPosition(customControl).X, (int)e.GetPosition(customControl).Y);
+    }
+
+    private void Shapes_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
+
+        int type = Shapes.SelectedIndex;
+        customControl?.ChangeType(type);
     }
 }

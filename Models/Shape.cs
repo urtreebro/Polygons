@@ -12,7 +12,7 @@ public abstract class Shape
 
     public abstract bool IsInside(int nx, int ny);
 
-    protected Shape(int x, int y)
+    protected Shape(int x = 0, int y = 0)
     {
         this.x = x;
         this.y = y;

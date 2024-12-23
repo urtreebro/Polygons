@@ -16,7 +16,14 @@
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Figure type">
+                <ListBox x:Name="Shapes" SelectionChanged="Shapes_OnSelectionChanged"></ListBox>
+            </MenuItem>
+        </Menu>
+        <Polygons:CustomControl Name="MyCustomControl"></Polygons:CustomControl>
+    </DockPanel>
 
-    <Polygons:CustomControl Name="MyCustomControl"></Polygons:CustomControl>
 
 </Window>

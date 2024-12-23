@@ -12,7 +12,7 @@ public class CustomControl : UserControl
     private readonly List<Shape> _shapes = [];
 
     private int _prevX, _prevY;
-    private Shape _shapeType = new Circle(0, 0);
+    private int _shapeType;
 
     public override void Render(DrawingContext context)
     {
@@ -38,7 +38,18 @@ public class CustomControl : UserControl
 
         if (!inside)
         {
-            _shapes.Add(new Circle(newX, newY));
+            switch (_shapeType)
+            {
+                case 0:
+                    _shapes.Add(new Circle(newX, newY));
+                    break;
+                case 1:
+                    _shapes.Add(new Triangle(newX, newY));
+                    break;
+                case 2:
+                    _shapes.Add(new Square(newX, newY));
+                    break;
+            }
         }
 
         InvalidateVisual();
@@ -84,5 +95,10 @@ public class CustomControl : UserControl
         _prevX = newX;
         _prevY = newY;
         InvalidateVisual();
+    }
+
+    public void ChangeType(int type)
+    {
+        _shapeType = type;
     }
 }
