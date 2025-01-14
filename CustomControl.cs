@@ -4,6 +4,7 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Polygons.Models;
+using Point = Avalonia.Point;
 
 namespace Polygons;
 
@@ -22,6 +23,11 @@ public class CustomControl : UserControl
         }
 
         Console.WriteLine("Drawing");
+
+        if (_shapes.Count >= 3)
+        {
+            DrawConvexHullByDef(context);
+        }
     }
 
     public void LeftClick(int newX, int newY)
@@ -49,6 +55,29 @@ public class CustomControl : UserControl
                 case 2:
                     _shapes.Add(new Square(newX, newY));
                     break;
+            }
+
+            if (_shapes.Count >= 3)
+            {
+                UpdatePointsInConvexHull();
+                var drag = false;
+                if (!_shapes.Last().IsInConvexHull)
+                {
+                    drag = true;
+                    _shapes.Remove(_shapes.Last());
+                    foreach (var shape in _shapes)
+                    {
+                        shape.IsMoving = true;
+                    }
+
+                    _prevX = newX;
+                    _prevY = newY;
+                }
+
+                if (!drag)
+                {
+                    RemoveShapesInsideHull();
+                }
             }
         }
 
@@ -94,11 +123,171 @@ public class CustomControl : UserControl
 
         _prevX = newX;
         _prevY = newY;
+        RemoveShapesInsideHull();
+        InvalidateVisual();
+    }
+
+    private void RemoveShapesInsideHull()
+    {
+        foreach (var shape in _shapes.ToList().Where(shape => !shape.IsInConvexHull))
+        {
+            _shapes.Remove(shape);
+        }
+
         InvalidateVisual();
     }
 
     public void ChangeType(int type)
     {
         _shapeType = type;
+    }
+
+    private void DrawConvexHullByDef(DrawingContext context)
+    {
+        foreach (var shape in _shapes)
+        {
+            shape.IsInConvexHull = false;
+        }
+
+        int i = 0;
+        foreach (var s1 in _shapes)
+        {
+            if (i == _shapes.Count - 1)
+            {
+                break;
+            }
+
+            int j = 0;
+            foreach (var s2 in _shapes)
+            {
+                if (j <= i)
+                {
+                    j++;
+                    continue;
+                }
+
+                int l = 0;
+                bool upper = false, lower = false;
+                double k = (double)(s2.Y - s1.Y) / (s2.X - s1.X);
+                double b = s2.Y - k * s2.X;
+                foreach (var s3 in _shapes)
+                {
+                    if (l != i && l != j)
+                    {
+                        if (s1.X != s2.X)
+                        {
+                            if (s3.X * k + b > s3.Y)
+                            {
+                                lower = true;
+                            }
+                            else if (s3.X * k + b < s3.Y)
+                            {
+                                upper = true;
+                            }
+                        }
+                        else
+                        {
+                            if (s2.X > s3.X)
+                            {
+                                lower = true;
+                            }
+                            else if (s2.X < s3.X)
+                            {
+                                upper = true;
+                            }
+                        }
+                    }
+
+                    l++;
+                }
+
+                if (upper != lower || (upper == false && lower == false))
+                {
+                    Brush lineBrush = new SolidColorBrush(Colors.BlueViolet);
+                    Pen pen = new(lineBrush, lineCap: PenLineCap.Square);
+                    var point1 = new Point(s1.X, s1.Y);
+                    var point2 = new Point(s2.X, s2.Y);
+                    s1.IsInConvexHull = true;
+                    s2.IsInConvexHull = true;
+                    context.DrawLine(pen, point1, point2);
+                }
+
+                j++;
+            }
+
+            i++;
+        }
+    }
+
+    private void UpdatePointsInConvexHull()
+    {
+        foreach (var shape in _shapes)
+        {
+            shape.IsInConvexHull = false;
+        }
+
+        int i = 0;
+        foreach (var s1 in _shapes)
+        {
+            if (i == _shapes.Count - 1)
+            {
+                break;
+            }
+
+            int j = 0;
+            foreach (var s2 in _shapes)
+            {
+                if (j <= i)
+                {
+                    j++;
+                    continue;
+                }
+
+                int l = 0;
+                bool upper = false, lower = false;
+                double k = (double)(s2.Y - s1.Y) / (s2.X - s1.X);
+                double b = s2.Y - k * s2.X;
+                foreach (var s3 in _shapes)
+                {
+                    if (l != i && l != j)
+                    {
+                        if (s1.X != s2.X)
+                        {
+                            if (s3.X * k + b > s3.Y)
+                            {
+                                lower = true;
+                            }
+                            else if (s3.X * k + b < s3.Y)
+                            {
+                                upper = true;
+                            }
+                        }
+                        else
+                        {
+                            if (s2.X > s3.X)
+                            {
+                                lower = true;
+                            }
+                            else if (s2.X < s3.X)
+                            {
+                                upper = true;
+                            }
+                        }
+                    }
+
+                    l++;
+                }
+
+                if (upper != lower || (upper == false && lower == false))
+                {
+                    s1.IsInConvexHull = true;
+                    s2.IsInConvexHull = true;
+                }
+
+                j++;
+            }
+
+            i++;
+        }
     }
 }

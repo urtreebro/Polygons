@@ -8,6 +8,8 @@ public abstract class Shape
     protected static readonly int R;
     protected static Color color;
 
+    public bool IsInConvexHull { get; set; } = true;
+
     public bool IsMoving { get; set; }
 
     public abstract bool IsInside(int nx, int ny);
