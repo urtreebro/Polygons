@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Polygons.Models;
@@ -22,8 +24,6 @@ public class CustomControl : UserControl
             shape.Draw(context);
         }
 
-        Console.WriteLine("Drawing");
-
         if (_shapes.Count >= 3)
         {
             DrawConvexHullByDef(context);
@@ -35,7 +35,6 @@ public class CustomControl : UserControl
         bool inside = false;
         foreach (var shape in _shapes.Where(shape => shape.IsInside(newX, newY)))
         {
-            Console.WriteLine("Click");
             _prevX = newX;
             _prevY = newY;
             shape.IsMoving = true;
@@ -101,7 +100,6 @@ public class CustomControl : UserControl
     {
         foreach (var shape in _shapes.Where(shape => shape.IsMoving))
         {
-            Console.WriteLine("Move");
             shape.X += newX - _prevX;
             shape.Y += newY - _prevY;
         }
@@ -115,7 +113,6 @@ public class CustomControl : UserControl
     {
         foreach (var shape in _shapes.Where(shape => shape.IsMoving))
         {
-            Console.WriteLine("Release");
             shape.X += newX - _prevX;
             shape.Y += newY - _prevY;
             shape.IsMoving = false;
@@ -152,11 +149,6 @@ public class CustomControl : UserControl
         int i = 0;
         foreach (var s1 in _shapes)
         {
-            if (i == _shapes.Count - 1)
-            {
-                break;
-            }
-
             int j = 0;
             foreach (var s2 in _shapes)
             {
@@ -172,6 +164,12 @@ public class CustomControl : UserControl
                 double b = s2.Y - k * s2.X;
                 foreach (var s3 in _shapes)
                 {
+                    if ((s3.X == s2.X && s3.Y == s2.Y) || (s3.X == s1.X && s3.Y == s1.Y))
+                    {
+                        l++;
+                        continue;
+                    }
+
                     if (l != i && l != j)
                     {
                         if (s1.X != s2.X)
@@ -201,7 +199,7 @@ public class CustomControl : UserControl
                     l++;
                 }
 
-                if (upper != lower || (upper == false && lower == false))
+                if (upper != lower)
                 {
                     Brush lineBrush = new SolidColorBrush(Colors.BlueViolet);
                     Pen pen = new(lineBrush, lineCap: PenLineCap.Square);
@@ -244,6 +242,7 @@ public class CustomControl : UserControl
                 }
 
                 int l = 0;
+
                 bool upper = false, lower = false;
                 double k = (double)(s2.Y - s1.Y) / (s2.X - s1.X);
                 double b = s2.Y - k * s2.X;
