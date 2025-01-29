@@ -21,6 +21,10 @@
             <MenuItem Header="Figure type">
                 <ListBox x:Name="Shapes" SelectionChanged="Shapes_OnSelectionChanged"></ListBox>
             </MenuItem>
+            <MenuItem Header="Test">
+                <Button Click="Button_OnClickParallel">Parallel</Button>
+                <Button Click="Button_OnClickSerial">Serial</Button>
+            </MenuItem>
         </Menu>
         <Polygons:CustomControl Name="MyCustomControl"></Polygons:CustomControl>
     </DockPanel>

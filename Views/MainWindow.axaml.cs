@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 
 namespace Polygons.Views;
 
@@ -45,5 +46,19 @@ public partial class MainWindow : Window
 
         int type = Shapes.SelectedIndex;
         customControl?.ChangeType(type);
+    }
+
+    private void Button_OnClickParallel(object? sender, RoutedEventArgs e)
+    {
+        var ownerWindow = this;
+        var window = new ParallelTestWindow();
+        window.ShowDialog(ownerWindow);
+    }
+
+    private void Button_OnClickSerial(object? sender, RoutedEventArgs e)
+    {
+        var ownerWindow = this;
+        var window = new SerialTestWindow();
+        window.ShowDialog(ownerWindow);
     }
 }
