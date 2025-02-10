@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -53,6 +52,7 @@ public class ParallelTestControl : UserControl
 
     private void ParallelDraw(DrawingContext context)
     {
+        const double eps = 1e-4;
         foreach (var shape in _shapes)
         {
             shape.IsInConvexHull = false;
@@ -77,13 +77,13 @@ public class ParallelTestControl : UserControl
                 int l = 0;
 
                 bool upper = false, lower = false;
-                double k = (double)(s2.Y - s1.Y) / (s2.X - s1.X);
+                double k = (s2.Y - s1.Y) / (s2.X - s1.X);
                 double b = s2.Y - k * s2.X;
                 foreach (var s3 in _shapes)
                 {
                     if (l != i && l != j)
                     {
-                        if (s1.X != s2.X)
+                        if (Math.Abs(s1.X - s2.X) > eps)
                         {
                             if (s3.X * k + b > s3.Y)
                             {

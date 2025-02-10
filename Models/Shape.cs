@@ -4,7 +4,7 @@ namespace Polygons.Models;
 
 public abstract class Shape
 {
-    protected int x, y;
+    protected double x, y;
     protected static readonly int R;
     protected static Color color;
 
@@ -12,9 +12,9 @@ public abstract class Shape
 
     public bool IsMoving { get; set; }
 
-    public abstract bool IsInside(int nx, int ny);
+    public abstract bool IsInside(double nx, double ny);
 
-    protected Shape(int x = 0, int y = 0)
+    protected Shape(double x = 0, double y = 0)
     {
         this.x = x;
         this.y = y;
@@ -26,13 +26,13 @@ public abstract class Shape
         color = Colors.Orange;
     }
 
-    public int X
+    public double X
     {
         get => x;
         set => x = value;
     }
 
-    public int Y
+    public double Y
     {
         get => y;
         set => y = value;

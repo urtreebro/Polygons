@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Polygons.Models;
@@ -15,7 +13,7 @@ public class CustomControl : UserControl
     private readonly List<Shape> _shapes = [];
 
     private int _prevX, _prevY;
-    private int _shapeType;
+    private int _shapeType, _algorithmType;
 
     public override void Render(DrawingContext context)
     {
@@ -26,7 +24,15 @@ public class CustomControl : UserControl
 
         if (_shapes.Count >= 3)
         {
-            DrawConvexHullByDef(context);
+            switch (_algorithmType)
+            {
+                case 0:
+                    DrawConvexHullByDef(context);
+                    break;
+                case 1:
+                    DrawConvexHullJarvis(context);
+                    break;
+            }
         }
     }
 
@@ -58,7 +64,16 @@ public class CustomControl : UserControl
 
             if (_shapes.Count >= 3)
             {
-                UpdatePointsInConvexHull();
+                switch (_algorithmType)
+                {
+                    case 0:
+                        UpdatePointsInConvexHullByDef();
+                        break;
+                    case 1:
+                        UpdatePointsInConvexHullJarvis();
+                        break;
+                }
+
                 var drag = false;
                 if (!_shapes.Last().IsInConvexHull)
                 {
@@ -126,10 +141,7 @@ public class CustomControl : UserControl
 
     private void RemoveShapesInsideHull()
     {
-        foreach (var shape in _shapes.ToList().Where(shape => !shape.IsInConvexHull))
-        {
-            _shapes.Remove(shape);
-        }
+        _shapes.RemoveAll(s => !s.IsInConvexHull);
 
         InvalidateVisual();
     }
@@ -139,8 +151,102 @@ public class CustomControl : UserControl
         _shapeType = type;
     }
 
+    public void ChangeAlgorithm(int type)
+    {
+        _algorithmType = type;
+    }
+
+    private void DrawConvexHullJarvis(DrawingContext context)
+    {
+        foreach (var shape in _shapes)
+        {
+            shape.IsInConvexHull = false;
+        }
+
+        Brush lineBrush = new SolidColorBrush(Colors.Fuchsia);
+        Pen pen = new(lineBrush, lineCap: PenLineCap.Square);
+        double minX = Int32.MaxValue;
+        double minY = Int32.MinValue;
+        Shape first = new Circle(0, 0);
+        foreach (var s in _shapes)
+        {
+            if (s.Y > minY)
+            {
+                minY = s.Y;
+                minX = s.X;
+                first = s;
+            }
+            else if (Math.Abs(s.Y - minY) < 1e-4)
+            {
+                if (s.X < minX)
+                {
+                    minY = s.Y;
+                    minX = s.X;
+                    first = s;
+                }
+            }
+        }
+
+        _shapes.Find(s => s == first)!.IsInConvexHull = true;
+        Shape mid = new Circle(first.X - 0.1, first.Y);
+        Shape end = mid;
+        double maxCos = -2;
+        foreach (var s in _shapes)
+        {
+            if (s == mid || s == first) continue;
+            if (maxCos < GetCos(first, mid, s))
+            {
+                end = s;
+                maxCos = GetCos(first, mid, s);
+            }
+        }
+
+        mid = end;
+        _shapes.Find(i => i == end)!.IsInConvexHull = true;
+        var p1 = new Point(first.X, first.Y);
+        var p2 = new Point(mid.X, mid.Y);
+        context.DrawLine(pen, p1, p2);
+        var start = first;
+        while (true)
+        {
+            double minCos = 2;
+            foreach (var s in _shapes)
+            {
+                if (s == start || s == mid) continue;
+                if (minCos > GetCos(start, mid, s))
+                {
+                    end = s;
+                    minCos = GetCos(start, mid, s);
+                }
+            }
+
+            start = mid;
+            mid = end;
+            _shapes.Find(i => i == end)!.IsInConvexHull = true;
+            p1 = new Point(start.X, start.Y);
+            p2 = new Point(mid.X, mid.Y);
+            context.DrawLine(pen, p1, p2);
+            if (end == first)
+            {
+                break;
+            }
+        }
+    }
+
+    private static double GetCos(Shape a, Shape b, Shape c)
+    {
+        var ba = (a.X - b.X, a.Y - b.Y);
+        var bc = (c.X - b.X, c.Y - b.Y);
+        var scalarProduct = ba.Item1 * bc.Item1 + ba.Item2 * bc.Item2;
+        var baLen = Math.Sqrt(ba.Item1 * ba.Item1 + ba.Item2 * ba.Item2);
+        var bcLen = Math.Sqrt(bc.Item1 * bc.Item1 + bc.Item2 * bc.Item2);
+        double cos = scalarProduct / (baLen * bcLen);
+        return cos;
+    }
+
     private void DrawConvexHullByDef(DrawingContext context)
     {
+        const double eps = 1e-4;
         foreach (var shape in _shapes)
         {
             shape.IsInConvexHull = false;
@@ -160,19 +266,13 @@ public class CustomControl : UserControl
 
                 int l = 0;
                 bool upper = false, lower = false;
-                double k = (double)(s2.Y - s1.Y) / (s2.X - s1.X);
+                double k = (s2.Y - s1.Y) / (s2.X - s1.X);
                 double b = s2.Y - k * s2.X;
                 foreach (var s3 in _shapes)
                 {
-                    if ((s3.X == s2.X && s3.Y == s2.Y) || (s3.X == s1.X && s3.Y == s1.Y))
-                    {
-                        l++;
-                        continue;
-                    }
-
                     if (l != i && l != j)
                     {
-                        if (s1.X != s2.X)
+                        if (Math.Abs(s1.X - s2.X) > eps)
                         {
                             if (s3.X * k + b > s3.Y)
                             {
@@ -217,8 +317,9 @@ public class CustomControl : UserControl
         }
     }
 
-    private void UpdatePointsInConvexHull()
+    private void UpdatePointsInConvexHullByDef()
     {
+        const double eps = 1e-4;
         foreach (var shape in _shapes)
         {
             shape.IsInConvexHull = false;
@@ -244,13 +345,13 @@ public class CustomControl : UserControl
                 int l = 0;
 
                 bool upper = false, lower = false;
-                double k = (double)(s2.Y - s1.Y) / (s2.X - s1.X);
+                double k = (s2.Y - s1.Y) / (s2.X - s1.X);
                 double b = s2.Y - k * s2.X;
                 foreach (var s3 in _shapes)
                 {
                     if (l != i && l != j)
                     {
-                        if (s1.X != s2.X)
+                        if (Math.Abs(s1.X - s2.X) > eps)
                         {
                             if (s3.X * k + b > s3.Y)
                             {
@@ -287,6 +388,75 @@ public class CustomControl : UserControl
             }
 
             i++;
+        }
+    }
+
+    private void UpdatePointsInConvexHullJarvis()
+    {
+        foreach (var shape in _shapes)
+        {
+            shape.IsInConvexHull = false;
+        }
+
+        double minX = Int32.MaxValue;
+        double minY = Int32.MinValue;
+        Shape first = new Circle(0, 0);
+        foreach (var s in _shapes)
+        {
+            if (s.Y > minY)
+            {
+                minY = s.Y;
+                minX = s.X;
+                first = s;
+            }
+            else if (Math.Abs(s.Y - minY) < 1e-4)
+            {
+                if (s.X < minX)
+                {
+                    minY = s.Y;
+                    minX = s.X;
+                    first = s;
+                }
+            }
+        }
+
+        _shapes.Find(s => s == first)!.IsInConvexHull = true;
+        Shape mid = new Circle(first.X - 0.1, first.Y);
+        Shape end = mid;
+        double maxCos = -2;
+        foreach (var s in _shapes)
+        {
+            if (s == mid || s == first) continue;
+            if (maxCos < GetCos(first, mid, s))
+            {
+                end = s;
+                maxCos = GetCos(first, mid, s);
+            }
+        }
+
+        mid = end;
+        _shapes.Find(i => i == end)!.IsInConvexHull = true;
+        var start = first;
+        while (true)
+        {
+            double minCos = 2;
+            foreach (var s in _shapes)
+            {
+                if (s == start || s == mid) continue;
+                if (minCos > GetCos(start, mid, s))
+                {
+                    end = s;
+                    minCos = GetCos(start, mid, s);
+                }
+            }
+
+            start = mid;
+            mid = end;
+            _shapes.Find(i => i == end)!.IsInConvexHull = true;
+            if (end == first)
+            {
+                break;
+            }
         }
     }
 }

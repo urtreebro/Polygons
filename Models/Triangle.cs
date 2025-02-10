@@ -8,9 +8,9 @@ public sealed class Triangle : Shape
 {
     private Point _point1, _point2, _point3;
     private static double Area => R * R * 0.25 * 3 * Math.Sqrt(3);
-    public Triangle(int x = 0, int y = 0) : base(x, y) { }
+    public Triangle(double x = 0, double y = 0) : base(x, y) { }
 
-    public override bool IsInside(int nx, int ny)
+    public override bool IsInside(double nx, double ny)
     {
         var pointClick = new Point(nx, ny);
         return Math.Abs(Area - HeronFormula(_point1, _point2, pointClick)
