@@ -5,9 +5,9 @@ namespace Polygons.Models;
 
 public sealed class Circle : Shape
 {
-    public Circle(int x, int y) : base(x, y) { }
+    public Circle(double x, double y) : base(x, y) { }
 
-    public override bool IsInside(int nx, int ny)
+    public override bool IsInside(double nx, double ny)
     {
         return (x - nx) * (x - nx) + (y - ny) * (y - ny) <= R * R;
     }

@@ -11,6 +11,8 @@ public partial class MainWindow : Window
         InitializeComponent();
         Shapes.ItemsSource = new[] { "Circle", "Triangle", "Square" };
         Shapes.SelectedIndex = 1;
+        Algorithms.ItemsSource = new[] { "By definition", "Jarvis" };
+        Algorithms.SelectedIndex = 0;
     }
 
     private void OnPointerPressed(object sender, PointerPressedEventArgs e)
@@ -60,5 +62,19 @@ public partial class MainWindow : Window
         var ownerWindow = this;
         var window = new SerialTestWindow();
         window.ShowDialog(ownerWindow);
+    }
+
+    private void Algorithms_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
+
+        int type = Algorithms.SelectedIndex;
+        customControl?.ChangeAlgorithm(type);
+    }
+
+    private void Button_OnClickCheckPerformance(object? sender, RoutedEventArgs e)
+    {
+        var window = new ChartWindow();
+        window.Show();
     }
 }

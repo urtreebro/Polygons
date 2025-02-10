@@ -21,6 +21,10 @@
             <MenuItem Header="Figure type">
                 <ListBox x:Name="Shapes" SelectionChanged="Shapes_OnSelectionChanged"></ListBox>
             </MenuItem>
+            <MenuItem Header="Drawing algorithm">
+                <ListBox x:Name="Algorithms" SelectionChanged="Algorithms_OnSelectionChanged"></ListBox>
+                <Button Click="Button_OnClickCheckPerformance">Check performance</Button>
+            </MenuItem>
             <MenuItem Header="Test">
                 <Button Click="Button_OnClickParallel">Parallel</Button>
                 <Button Click="Button_OnClickSerial">Serial</Button>

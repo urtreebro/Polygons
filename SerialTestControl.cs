@@ -52,6 +52,7 @@ public class SerialTestControl : UserControl
 
     private void SerialDraw(DrawingContext context)
     {
+        const double eps = 1e-4;
         foreach (var shape in _shapes)
         {
             shape.IsInConvexHull = false;
@@ -75,15 +76,9 @@ public class SerialTestControl : UserControl
                 double b = s2.Y - k * s2.X;
                 foreach (var s3 in _shapes)
                 {
-                    if ((s3.X == s2.X && s3.Y == s2.Y) || (s3.X == s1.X && s3.Y == s1.Y))
-                    {
-                        l++;
-                        continue;
-                    }
-
                     if (l != i && l != j)
                     {
-                        if (s1.X != s2.X)
+                        if (Math.Abs(s1.X - s2.X) > eps)
                         {
                             if (s3.X * k + b > s3.Y)
                             {
