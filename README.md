@@ -7,7 +7,7 @@
 - [x] Delete the last created figure by right click ✅
 - [x] Change figure type in menu ✅
 - [x] Make convex hull when there are at least 3 figures ✅
-- [x] Add several convex hull algorithms
+- [x] Add several convex hull algorithms ✅
 - [x] Drag and drop for a convex hull ✅
 - [ ] Change figures' color in a modal window
 - [ ] Change figures' radius in a modal window

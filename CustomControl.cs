@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -10,7 +11,7 @@ namespace Polygons;
 
 public class CustomControl : UserControl
 {
-    private readonly List<Shape> _shapes = [];
+    private List<Shape> _shapes = [];
 
     private int _prevX, _prevY;
     private int _shapeType, _algorithmType;
@@ -67,10 +68,10 @@ public class CustomControl : UserControl
                 switch (_algorithmType)
                 {
                     case 0:
-                        UpdatePointsInConvexHullByDef();
+                        UpdateConvexHullByDef(ref _shapes);
                         break;
                     case 1:
-                        UpdatePointsInConvexHullJarvis();
+                        UpdateConvexHullJarvis(ref _shapes);
                         break;
                 }
 
@@ -147,6 +148,7 @@ public class CustomControl : UserControl
     }
 
     public void ChangeType(int type)
+
     {
         _shapeType = type;
     }
@@ -317,24 +319,24 @@ public class CustomControl : UserControl
         }
     }
 
-    private void UpdatePointsInConvexHullByDef()
+    private void UpdateConvexHullByDef(ref List<Shape> shapes)
     {
         const double eps = 1e-4;
-        foreach (var shape in _shapes)
+        foreach (var shape in shapes)
         {
             shape.IsInConvexHull = false;
         }
 
         int i = 0;
-        foreach (var s1 in _shapes)
+        foreach (var s1 in shapes)
         {
-            if (i == _shapes.Count - 1)
+            if (i == shapes.Count - 1)
             {
                 break;
             }
 
             int j = 0;
-            foreach (var s2 in _shapes)
+            foreach (var s2 in shapes)
             {
                 if (j <= i)
                 {
@@ -347,7 +349,7 @@ public class CustomControl : UserControl
                 bool upper = false, lower = false;
                 double k = (s2.Y - s1.Y) / (s2.X - s1.X);
                 double b = s2.Y - k * s2.X;
-                foreach (var s3 in _shapes)
+                foreach (var s3 in shapes)
                 {
                     if (l != i && l != j)
                     {
@@ -391,9 +393,9 @@ public class CustomControl : UserControl
         }
     }
 
-    private void UpdatePointsInConvexHullJarvis()
+    private void UpdateConvexHullJarvis(ref List<Shape> shapes)
     {
-        foreach (var shape in _shapes)
+        foreach (var shape in shapes)
         {
             shape.IsInConvexHull = false;
         }
@@ -401,7 +403,7 @@ public class CustomControl : UserControl
         double minX = Int32.MaxValue;
         double minY = Int32.MinValue;
         Shape first = new Circle(0, 0);
-        foreach (var s in _shapes)
+        foreach (var s in shapes)
         {
             if (s.Y > minY)
             {
@@ -420,11 +422,11 @@ public class CustomControl : UserControl
             }
         }
 
-        _shapes.Find(s => s == first)!.IsInConvexHull = true;
+        shapes.Find(s => s == first)!.IsInConvexHull = true;
         Shape mid = new Circle(first.X - 0.1, first.Y);
         Shape end = mid;
         double maxCos = -2;
-        foreach (var s in _shapes)
+        foreach (var s in shapes)
         {
             if (s == mid || s == first) continue;
             if (maxCos < GetCos(first, mid, s))
@@ -435,12 +437,12 @@ public class CustomControl : UserControl
         }
 
         mid = end;
-        _shapes.Find(i => i == end)!.IsInConvexHull = true;
+        shapes.Find(i => i == end)!.IsInConvexHull = true;
         var start = first;
         while (true)
         {
             double minCos = 2;
-            foreach (var s in _shapes)
+            foreach (var s in shapes)
             {
                 if (s == start || s == mid) continue;
                 if (minCos > GetCos(start, mid, s))
@@ -452,11 +454,72 @@ public class CustomControl : UserControl
 
             start = mid;
             mid = end;
-            _shapes.Find(i => i == end)!.IsInConvexHull = true;
+            shapes.Find(i => i == end)!.IsInConvexHull = true;
             if (end == first)
             {
                 break;
             }
         }
+    }
+
+    public Tuple<int, int>[] GetChartJarvis()
+    {
+        int[] sizes = [10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
+        Tuple<int, int>[] chart = new Tuple<int, int>[11];
+        var rnd = new Random();
+        var timer = new Stopwatch();
+        List<Shape> shapes = [];
+        for (int j = 0; j < sizes.Length; ++j)
+        {
+            timer.Reset();
+            shapes.Clear();
+            for (int i = 0; i < sizes[j]; ++i)
+            {
+                shapes.Add(new Circle(rnd.Next(1, 10000), rnd.Next(1, 10000)));
+            }
+
+            if (j == 0)
+            {
+                UpdateConvexHullJarvis(ref shapes);
+            }
+
+            timer.Start();
+            UpdateConvexHullJarvis(ref shapes);
+            timer.Stop();
+            var elapsed = timer.Elapsed.TotalMilliseconds;
+            chart[j] = new(sizes[j], (int)(100 * elapsed));
+        }
+
+        return chart;
+    }
+
+    public Tuple<int, int>[] GetChartByDef()
+    {
+        int[] sizes = [10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
+        Tuple<int, int>[] chart = new Tuple<int, int>[11];
+        var rnd = new Random();
+        var timer = new Stopwatch();
+        List<Shape> shapes = [];
+        for (int j = 0; j < sizes.Length; ++j)
+        {
+            timer.Reset();
+            shapes.Clear();
+            for (int i = 0; i < sizes[j]; ++i)
+            {
+                shapes.Add(new Circle(rnd.Next(1, 10000), rnd.Next(1, 10000)));
+            }
+
+            if (j == 0)
+            {
+                UpdateConvexHullByDef(ref shapes);
+            }
+            timer.Start();
+            UpdateConvexHullByDef(ref shapes);
+            timer.Stop();
+            var elapsed = timer.Elapsed.TotalMilliseconds;
+            chart[j] = new(sizes[j], (int)(100 * elapsed));
+        }
+
+        return chart;
     }
 }

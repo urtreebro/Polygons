@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -74,7 +75,9 @@ public partial class MainWindow : Window
 
     private void Button_OnClickCheckPerformance(object? sender, RoutedEventArgs e)
     {
-        var window = new ChartWindow();
+        CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
+
+        var window = new ChartWindow(customControl?.GetChartJarvis(), customControl?.GetChartByDef());
         window.Show();
     }
 }
