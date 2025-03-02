@@ -462,10 +462,10 @@ public class CustomControl : UserControl
         }
     }
 
-    public Tuple<int, int>[] GetChartJarvis()
+    public Tuple<int, double>[] GetChartJarvis()
     {
         int[] sizes = [10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
-        Tuple<int, int>[] chart = new Tuple<int, int>[11];
+        Tuple<int, double>[] chart = new Tuple<int, double>[11];
         var rnd = new Random();
         var timer = new Stopwatch();
         List<Shape> shapes = [];
@@ -487,16 +487,16 @@ public class CustomControl : UserControl
             UpdateConvexHullJarvis(ref shapes);
             timer.Stop();
             var elapsed = timer.Elapsed.TotalMilliseconds;
-            chart[j] = new(sizes[j], (int)(100 * elapsed));
+            chart[j] = new(sizes[j], elapsed);
         }
 
         return chart;
     }
 
-    public Tuple<int, int>[] GetChartByDef()
+    public Tuple<int, double>[] GetChartByDef()
     {
         int[] sizes = [10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
-        Tuple<int, int>[] chart = new Tuple<int, int>[11];
+        Tuple<int, double>[] chart = new Tuple<int, double>[11];
         var rnd = new Random();
         var timer = new Stopwatch();
         List<Shape> shapes = [];
@@ -517,7 +517,7 @@ public class CustomControl : UserControl
             UpdateConvexHullByDef(ref shapes);
             timer.Stop();
             var elapsed = timer.Elapsed.TotalMilliseconds;
-            chart[j] = new(sizes[j], (int)(100 * elapsed));
+            chart[j] = new(sizes[j], elapsed);
         }
 
         return chart;

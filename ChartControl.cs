@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using Avalonia;
 using Avalonia.Controls;
@@ -8,11 +9,12 @@ namespace Polygons;
 
 public class ChartControl : UserControl
 {
-    private Tuple<int, int>[]? _jarvisChart;
-    private Tuple<int, int>[]? _byDefChart;
+    private Tuple<int, double>[]? _jarvisChart;
+    private Tuple<int, double>[]? _byDefChart;
     private bool _isChart;
+    private const int Scale = 1000;
 
-    public void SetArrays(Tuple<int, int>[]? jarv, Tuple<int, int>[]? def)
+    public void SetArrays(Tuple<int, double>[]? jarv, Tuple<int, double>[]? def)
     {
         _jarvisChart = jarv;
         _byDefChart = def;
@@ -37,6 +39,7 @@ public class ChartControl : UserControl
         {
             context.DrawLine(pen, new Point(x, 502), new Point(x, 498));
         }
+
         if (_isChart)
         {
             DrawChart(context, _jarvisChart, Colors.Blue);
@@ -44,29 +47,48 @@ public class ChartControl : UserControl
         }
     }
 
-    private void DrawChart(DrawingContext context, Tuple<int, int>[]? chart, Color color)
+    private void DrawChart(DrawingContext context, Tuple<int, double>[]? chart, Color color)
     {
         Brush lineBrush = new SolidColorBrush(color);
         Pen pen = new(lineBrush, lineCap: PenLineCap.Square);
         for (int i = 1; i < chart?.Length; ++i)
         {
-            var p1 = new Point(chart[i - 1].Item1 + 30, 500 - chart[i - 1].Item2);
-            var p2 = new Point(chart[i].Item1 + 30, 500 - chart[i].Item2);
+            var p1 = new Point(chart[i - 1].Item1 + 30, 500 - chart[i - 1].Item2 * Scale);
+            var p2 = new Point(chart[i].Item1 + 30, 500 - chart[i].Item2 * Scale);
             context.DrawLine(pen, p1, p2);
         }
     }
 
-    private Tuple<int, int>[] CreateFuncChart(Func<int, int> func)
+    private Tuple<int, double>[] CreateFuncChart(Func<int, double> func)
     {
-        Tuple<int, int>[] chart = new Tuple<int, int>[50];
+        Tuple<int, double>[] chart = new Tuple<int, double>[50];
+        var timer = new Stopwatch();
+        var counter = 0;
         var idx = 0;
-        for (int x = 1; x <= 500; x += 10)
+        timer.Start();
+        for (int n = 1; n <= 500; n += 10)
         {
-            chart[idx] = new Tuple<int, int>(x, func(x));
+            if (n == 1)
+            {
+                for (int x = 0; x < func(n); ++x)
+                {
+                    counter++;
+                }
+            }
+
+            timer.Reset();
+            timer.Start();
+            for (int x = 0; x < func(n); ++x)
+            {
+                counter++;
+            }
+
+            timer.Stop();
+            var elapsed = timer.Elapsed.TotalMilliseconds;
+            chart[idx] = new Tuple<int, double>(n, elapsed);
             idx++;
         }
 
         return chart;
     }
-    
 }

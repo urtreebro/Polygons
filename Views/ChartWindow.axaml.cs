@@ -8,10 +8,10 @@ namespace Polygons.Views;
 
 public partial class ChartWindow : Window
 {
-    private readonly Tuple<int, int>[]? _jarvisChart;
-    private readonly Tuple<int, int>[]? _byDefChart;
+    private readonly Tuple<int, double>[]? _jarvisChart;
+    private readonly Tuple<int, double>[]? _byDefChart;
     
-    public ChartWindow(Tuple<int, int>[]? jarv, Tuple<int, int>[]? def)
+    public ChartWindow(Tuple<int, double>[]? jarv, Tuple<int, double>[]? def)
     {
         InitializeComponent();
         _jarvisChart = jarv;
