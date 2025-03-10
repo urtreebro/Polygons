@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Linq.Expressions;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -12,13 +11,15 @@ public class ChartControl : UserControl
     private Tuple<int, double>[]? _jarvisChart;
     private Tuple<int, double>[]? _byDefChart;
     private bool _isChart;
-    private const int Scale = 1000;
+    private int _chartToDraw = 3;
+    private int _scale = 1000;
 
-    public void SetArrays(Tuple<int, double>[]? jarv, Tuple<int, double>[]? def)
+    public void SetArrays(Tuple<int, double>[]? jarv, Tuple<int, double>[]? def, int type)
     {
         _jarvisChart = jarv;
         _byDefChart = def;
         _isChart = true;
+        _chartToDraw = type;
         InvalidateVisual();
     }
 
@@ -42,8 +43,22 @@ public class ChartControl : UserControl
 
         if (_isChart)
         {
-            DrawChart(context, _jarvisChart, Colors.Blue);
-            DrawChart(context, _byDefChart, Colors.DarkOrange);
+            switch (_chartToDraw)
+            {
+                case 1:
+                    _scale = 1;
+                    DrawChart(context, _byDefChart, Colors.DarkOrange);
+                    break;
+                case 2:
+                    _scale = 1000;
+                    DrawChart(context, _jarvisChart, Colors.Blue);
+                    break;
+                case 3:
+                    _scale = 1000;
+                    DrawChart(context, _jarvisChart, Colors.Blue);
+                    DrawChart(context, _byDefChart, Colors.DarkOrange);
+                    break;
+            }
         }
     }
 
@@ -53,8 +68,8 @@ public class ChartControl : UserControl
         Pen pen = new(lineBrush, lineCap: PenLineCap.Square);
         for (int i = 1; i < chart?.Length; ++i)
         {
-            var p1 = new Point(chart[i - 1].Item1 + 30, 500 - chart[i - 1].Item2 * Scale);
-            var p2 = new Point(chart[i].Item1 + 30, 500 - chart[i].Item2 * Scale);
+            var p1 = new Point(chart[i - 1].Item1 + 30, 500 - chart[i - 1].Item2 * _scale);
+            var p2 = new Point(chart[i].Item1 + 30, 500 - chart[i].Item2 * _scale);
             context.DrawLine(pen, p1, p2);
         }
     }
