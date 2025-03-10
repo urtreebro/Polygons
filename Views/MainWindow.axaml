@@ -23,7 +23,14 @@
             </MenuItem>
             <MenuItem Header="Drawing algorithm">
                 <ListBox x:Name="Algorithms" SelectionChanged="Algorithms_OnSelectionChanged"></ListBox>
-                <Button Click="Button_OnClickCheckPerformance">Check performance</Button>
+            </MenuItem>
+            <MenuItem Header="Check performance">
+                <Button Click="Button_OnClickCheckByDef">Check ByDef</Button>
+                <Button Click="Button_OnClickCheckJarvis">Check Jarvis</Button>
+                <Button Click="Button_OnClickCheckPerformance">Check both</Button>
+            </MenuItem>
+            <MenuItem Header="Settings">
+                <Button Click="Button_OnClickChangeRadius">Change Radius</Button>
             </MenuItem>
             <MenuItem Header="Test">
                 <Button Click="Button_OnClickParallel">Parallel</Button>

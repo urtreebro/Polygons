@@ -9,7 +9,8 @@
 - [x] Make convex hull when there are at least 3 figures ✅
 - [x] Add several convex hull algorithms ✅
 - [x] Drag and drop for a convex hull ✅
-- [ ] Change figures' color in a modal window
-- [ ] Change figures' radius in a modal window
+- [x] Add comparison charts ✅
+- [ ] Change figures' color
+- [x] Change figures' radius ✅
 - [ ] Save and load files
 - [ ] Undo and redo

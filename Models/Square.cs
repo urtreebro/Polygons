@@ -7,7 +7,7 @@ namespace Polygons.Models;
 public sealed class Square : Shape
 {
     private Point _point1, _point2, _point3, _point4;
-    private static float InnerR => R / (float)Math.Sqrt(2);
+    private static double InnerR => R / Math.Sqrt(2);
     public Square(double x, double y) : base(x, y) { }
 
     public override bool IsInside(double newX, double newY)

@@ -1,12 +1,14 @@
-using System;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Polygons.Models;
 
 namespace Polygons.Views;
 
 public partial class MainWindow : Window
 {
+    private SliderWindow? _sliderWindow;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -77,7 +79,40 @@ public partial class MainWindow : Window
     {
         CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
 
-        var window = new ChartWindow(customControl?.GetChartJarvis(), customControl?.GetChartByDef());
+        var window = new ChartWindow(customControl?.GetChartJarvis(), customControl?.GetChartByDef(), 3);
         window.Show();
+    }
+
+    private void Button_OnClickCheckByDef(object? sender, RoutedEventArgs e)
+    {
+        CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
+
+        var window = new ChartWindow(null, customControl?.GetChartByDef(), 1);
+        window.Show();
+    }
+
+    private void Button_OnClickCheckJarvis(object? sender, RoutedEventArgs e)
+    {
+        CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
+
+        var window = new ChartWindow(customControl?.GetChartJarvis(), null, 2);
+        window.Show();
+    }
+
+    private void Button_OnClickChangeRadius(object? sender, RoutedEventArgs e)
+    {
+        CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
+        if (_sliderWindow is not { IsLoaded: true })
+        {
+            _sliderWindow = new SliderWindow();
+            _sliderWindow.SetRadius(Shape.R);
+            _sliderWindow.RadiusChanged += customControl!.UpdateRadius;
+            _sliderWindow.Show();
+        }
+        else
+        {
+            _sliderWindow.Activate();
+            _sliderWindow.WindowState = WindowState.Normal;
+        }
     }
 }

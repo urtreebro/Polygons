@@ -522,4 +522,10 @@ public class CustomControl : UserControl
 
         return chart;
     }
+    
+    public void UpdateRadius(object sender, RadiusEventArgs e)
+    {
+        Shape.R = e.Radius;
+        InvalidateVisual();
+    }
 }

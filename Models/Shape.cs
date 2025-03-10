@@ -5,7 +5,7 @@ namespace Polygons.Models;
 public abstract class Shape
 {
     protected double x, y;
-    protected static readonly int R;
+    public static double R;
     protected static Color color;
 
     public bool IsInConvexHull { get; set; } = true;
