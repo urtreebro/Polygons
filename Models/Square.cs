@@ -8,7 +8,11 @@ public sealed class Square : Shape
 {
     private Point _point1, _point2, _point3, _point4;
     private static double InnerR => R / Math.Sqrt(2);
-    public Square(double x, double y) : base(x, y) { }
+
+    public Square(double x, double y) : base(x, y)
+    {
+        Type = "Square";
+    }
 
     public override bool IsInside(double newX, double newY)
     {

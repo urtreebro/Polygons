@@ -12,5 +12,5 @@
 - [x] Add comparison charts ✅
 - [ ] Change figures' color
 - [x] Change figures' radius ✅
-- [ ] Save and load files
+- [x] Save and load files ✅
 - [ ] Undo and redo

@@ -16,6 +16,14 @@ public class CustomControl : UserControl
     private int _prevX, _prevY;
     private int _shapeType, _algorithmType;
 
+    public List<Shape> Shapes
+    {
+        get => _shapes;
+        set => _shapes = value;
+    }
+
+    public bool IsChanged { get; set; } = false;
+
     public override void Render(DrawingContext context)
     {
         foreach (var shape in _shapes)
@@ -40,6 +48,7 @@ public class CustomControl : UserControl
     public void LeftClick(int newX, int newY)
     {
         bool inside = false;
+        IsChanged = true;
         foreach (var shape in _shapes.Where(shape => shape.IsInside(newX, newY)))
         {
             _prevX = newX;
@@ -106,6 +115,7 @@ public class CustomControl : UserControl
             _prevX = newX;
             _prevY = newY;
             _shapes.Remove(shape);
+            IsChanged = true;
             break;
         }
 
@@ -148,7 +158,6 @@ public class CustomControl : UserControl
     }
 
     public void ChangeType(int type)
-
     {
         _shapeType = type;
     }
@@ -513,6 +522,7 @@ public class CustomControl : UserControl
             {
                 UpdateConvexHullByDef(ref shapes);
             }
+
             timer.Start();
             UpdateConvexHullByDef(ref shapes);
             timer.Stop();
@@ -522,7 +532,7 @@ public class CustomControl : UserControl
 
         return chart;
     }
-    
+
     public void UpdateRadius(object sender, RadiusEventArgs e)
     {
         Shape.R = e.Radius;

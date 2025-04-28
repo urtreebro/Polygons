@@ -5,7 +5,10 @@ namespace Polygons.Models;
 
 public sealed class Circle : Shape
 {
-    public Circle(double x, double y) : base(x, y) { }
+    public Circle(double x, double y) : base(x, y)
+    {
+        Type = "Circle";
+    }
 
     public override bool IsInside(double nx, double ny)
     {

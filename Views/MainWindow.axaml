@@ -11,6 +11,7 @@
         PointerPressed="OnPointerPressed"
         PointerMoved="OnPointerMoved"
         PointerReleased="OnPointerReleased"
+        Closing="Window_OnClosing"
         Title="Polygons">
 
     <Design.DataContext>
@@ -18,6 +19,13 @@
     </Design.DataContext>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <Button Theme="{StaticResource MenuButton}" Click="Button_New">New</Button>
+                <Button Theme="{StaticResource MenuButton}" Click="Button_Open">Open...</Button>
+                <Button Theme="{StaticResource MenuButton}" Click="Button_Save">Save</Button>
+                <Button Theme="{StaticResource MenuButton}" Click="Button_SaveAs">Save As...</Button>
+                <Button Theme="{StaticResource MenuButton}" Click="Button_Exit">Exit</Button>
+            </MenuItem>
             <MenuItem Header="Figure type">
                 <ListBox x:Name="Shapes" SelectionChanged="Shapes_OnSelectionChanged"></ListBox>
             </MenuItem>
@@ -25,16 +33,16 @@
                 <ListBox x:Name="Algorithms" SelectionChanged="Algorithms_OnSelectionChanged"></ListBox>
             </MenuItem>
             <MenuItem Header="Check performance">
-                <Button Click="Button_OnClickCheckByDef">Check ByDef</Button>
-                <Button Click="Button_OnClickCheckJarvis">Check Jarvis</Button>
-                <Button Click="Button_OnClickCheckPerformance">Check both</Button>
+                <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickCheckByDef">Check ByDef</Button>
+                <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickCheckJarvis">Check Jarvis</Button>
+                <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickCheckPerformance">Check both</Button>
             </MenuItem>
             <MenuItem Header="Settings">
-                <Button Click="Button_OnClickChangeRadius">Change Radius</Button>
+                <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickChangeRadius">Change Radius</Button>
             </MenuItem>
             <MenuItem Header="Test">
-                <Button Click="Button_OnClickParallel">Parallel</Button>
-                <Button Click="Button_OnClickSerial">Serial</Button>
+                <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickParallel">Parallel</Button>
+                <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickSerial">Serial</Button>
             </MenuItem>
         </Menu>
         <Polygons:CustomControl Name="MyCustomControl"></Polygons:CustomControl>
