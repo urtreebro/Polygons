@@ -12,7 +12,8 @@ public class ChartControl : UserControl
     private Tuple<int, double>[]? _byDefChart;
     private bool _isChart;
     private int _chartToDraw = 3;
-    private int _scale = 1000;
+    private const int Oy = 550;
+    private const int Ox = 30;
 
     public void SetArrays(Tuple<int, double>[]? jarv, Tuple<int, double>[]? def, int type)
     {
@@ -27,36 +28,30 @@ public class ChartControl : UserControl
     {
         Brush lineBrush = new SolidColorBrush(Colors.Black);
         Pen pen = new(lineBrush, lineCap: PenLineCap.Square);
-        int oy = 500;
-        int ox = 30;
-        context.DrawLine(pen, new Point(ox, oy), new Point(oy, 500));
-        context.DrawLine(pen, new Point(ox, oy), new Point(ox, 50));
-        for (int y = 500; y > 50; y -= 50)
-        {
-            context.DrawLine(pen, new Point(28, y), new Point(32, y));
-        }
-
-        for (int x = 30; x < 500; x += 50)
-        {
-            context.DrawLine(pen, new Point(x, 502), new Point(x, 498));
-        }
+        context.DrawLine(pen, new Point(Ox, Oy), new Point(530, Oy));
+        context.DrawLine(pen, new Point(Ox, Oy), new Point(Ox, 50));
 
         if (_isChart)
         {
+            Tuple<int, double>[][] charts;
             switch (_chartToDraw)
             {
                 case 1:
-                    _scale = 1;
-                    DrawChart(context, _byDefChart, Colors.DarkOrange);
+                    charts = MakeCoordinateSystem([_byDefChart!, CreateFuncChart(i => i * i * i)]);
+                    DrawChart(context, charts[0], Colors.DarkOrange);
+                    DrawChart(context, charts[1], Colors.Brown);
                     break;
                 case 2:
-                    _scale = 1000;
-                    DrawChart(context, _jarvisChart, Colors.Blue);
+                    charts = MakeCoordinateSystem([
+                        _jarvisChart!, CreateFuncChart(i => i * i)
+                    ]);
+                    DrawChart(context, charts[0], Colors.Blue);
+                    DrawChart(context, charts[1], Colors.Cyan);
                     break;
                 case 3:
-                    _scale = 1000;
-                    DrawChart(context, _jarvisChart, Colors.Blue);
-                    DrawChart(context, _byDefChart, Colors.DarkOrange);
+                    charts = MakeCoordinateSystem([_jarvisChart!, _byDefChart!]);
+                    DrawChart(context, charts[0], Colors.Blue);
+                    DrawChart(context, charts[1], Colors.DarkOrange);
                     break;
             }
         }
@@ -66,10 +61,11 @@ public class ChartControl : UserControl
     {
         Brush lineBrush = new SolidColorBrush(color);
         Pen pen = new(lineBrush, lineCap: PenLineCap.Square);
-        for (int i = 1; i < chart?.Length; ++i)
+
+        for (int i = 1; i < chart!.Length; ++i)
         {
-            var p1 = new Point(chart[i - 1].Item1 + 30, 500 - chart[i - 1].Item2 * _scale);
-            var p2 = new Point(chart[i].Item1 + 30, 500 - chart[i].Item2 * _scale);
+            var p1 = new Point(chart[i - 1].Item1, chart[i - 1].Item2);
+            var p2 = new Point(chart[i].Item1, chart[i].Item2);
             context.DrawLine(pen, p1, p2);
         }
     }
@@ -78,7 +74,7 @@ public class ChartControl : UserControl
     {
         Tuple<int, double>[] chart = new Tuple<int, double>[50];
         var timer = new Stopwatch();
-        var counter = 0;
+        var counter = 100;
         var idx = 0;
         timer.Start();
         for (int n = 1; n <= 500; n += 10)
@@ -95,7 +91,8 @@ public class ChartControl : UserControl
             timer.Start();
             for (int x = 0; x < func(n); ++x)
             {
-                counter++;
+                counter /= 42;
+                counter *= 72;
             }
 
             timer.Stop();
@@ -105,5 +102,27 @@ public class ChartControl : UserControl
         }
 
         return chart;
+    }
+
+    Tuple<int, double>[][] MakeCoordinateSystem(Tuple<int, double>[][] charts)
+    {
+        double maxY = double.MinValue;
+        foreach (var chart in charts)
+        {
+            foreach (var p in chart)
+            {
+                maxY = double.Max(maxY, p.Item2);
+            }
+        }
+
+        foreach (var chart in charts)
+        {
+            for (var i = 0; i < chart.Length; ++i)
+            {
+                chart[i] = new Tuple<int, double>(chart[i].Item1 + Ox, Oy - chart[i].Item2 * 500.0 / maxY);
+            }
+        }
+
+        return charts;
     }
 }

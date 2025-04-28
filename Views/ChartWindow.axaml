@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Polygons="clr-namespace:Polygons"
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
-        Width="550" Height="550"
+        Width="600" Height="600"
         x:Class="Polygons.Views.ChartWindow"
         Title="ChartWindow">
         <Polygons:ChartControl Name="MyChartControl" Loaded="MyChartControl_OnLoaded"></Polygons:ChartControl>

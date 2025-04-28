@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Polygons.Models;
@@ -473,30 +474,29 @@ public class CustomControl : UserControl
 
     public Tuple<int, double>[] GetChartJarvis()
     {
-        int[] sizes = [10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
-        Tuple<int, double>[] chart = new Tuple<int, double>[11];
+        var chart = new Tuple<int, double>[50];
         var rnd = new Random();
         var timer = new Stopwatch();
         List<Shape> shapes = [];
-        for (int j = 0; j < sizes.Length; ++j)
+        var idx = 0;
+        for (var i = 10; i <= 500; i += 10)
         {
             timer.Reset();
             shapes.Clear();
-            for (int i = 0; i < sizes[j]; ++i)
+            for (var j = 0; j < i; ++j)
             {
                 shapes.Add(new Circle(rnd.Next(1, 10000), rnd.Next(1, 10000)));
             }
 
-            if (j == 0)
+            if (i == 10)
             {
                 UpdateConvexHullJarvis(ref shapes);
             }
-
             timer.Start();
             UpdateConvexHullJarvis(ref shapes);
             timer.Stop();
             var elapsed = timer.Elapsed.TotalMilliseconds;
-            chart[j] = new(sizes[j], elapsed);
+            chart[idx++] = new Tuple<int, double>(i, elapsed);
         }
 
         return chart;
@@ -504,21 +504,21 @@ public class CustomControl : UserControl
 
     public Tuple<int, double>[] GetChartByDef()
     {
-        int[] sizes = [10, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
-        Tuple<int, double>[] chart = new Tuple<int, double>[11];
+        var chart = new Tuple<int, double>[50];
         var rnd = new Random();
         var timer = new Stopwatch();
         List<Shape> shapes = [];
-        for (int j = 0; j < sizes.Length; ++j)
+        var idx = 0;
+        for (var i = 10; i <= 500; i += 10)
         {
             timer.Reset();
             shapes.Clear();
-            for (int i = 0; i < sizes[j]; ++i)
+            for (var j = 0; j < i; ++j)
             {
                 shapes.Add(new Circle(rnd.Next(1, 10000), rnd.Next(1, 10000)));
             }
 
-            if (j == 0)
+            if (i == 0)
             {
                 UpdateConvexHullByDef(ref shapes);
             }
@@ -527,7 +527,7 @@ public class CustomControl : UserControl
             UpdateConvexHullByDef(ref shapes);
             timer.Stop();
             var elapsed = timer.Elapsed.TotalMilliseconds;
-            chart[j] = new(sizes[j], elapsed);
+            chart[idx++] = new Tuple<int, double>(i, elapsed);
         }
 
         return chart;
