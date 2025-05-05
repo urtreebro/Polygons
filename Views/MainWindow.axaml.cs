@@ -1,11 +1,14 @@
 using System;
+using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Polygons.Models;
+using Color = Avalonia.Media.Color;
 
 namespace Polygons.Views;
 
@@ -185,6 +188,7 @@ public partial class MainWindow : Window
         CloseOther();
         customControl!.Shapes = [];
         Shape.R = 35;
+        Shape.color = Colors.Orange;
         _filename = null;
     }
 
@@ -303,4 +307,14 @@ public partial class MainWindow : Window
         AppleUniformTypeIdentifiers = ["public.json"],
         MimeTypes = ["json/*"],
     };
+
+    private async void Button_OnClickChangeColor(object? sender, RoutedEventArgs e)
+    {
+        var colorWindow = new ColorWindow();
+        colorWindow.setColor(Shape.color);
+        var color = await colorWindow.ShowDialog<Color>(this);
+        if (color == Color.FromUInt32(0)) return;
+        CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
+        customControl!.UpdateColor(color);
+    }
 }

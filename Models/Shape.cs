@@ -9,7 +9,7 @@ public abstract class Shape
 {
     protected double x, y;
     public static double R;
-    protected static Color color;
+    public static Color color;
 
     public bool IsInConvexHull { get; set; } = true;
 

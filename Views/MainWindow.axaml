@@ -39,6 +39,7 @@
             </MenuItem>
             <MenuItem Header="Settings">
                 <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickChangeRadius">Change Radius</Button>
+                <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickChangeColor">Change Color</Button>
             </MenuItem>
             <MenuItem Header="Test">
                 <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickParallel">Parallel</Button>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Avalonia.Media;
 using Polygons.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -41,10 +42,12 @@ public class Data
     public List<Shape> Shapes { get; set; }
     public double R { get; set; }
 
-    public Data(List<Shape> shapes, double r)
+    public Color Color { get; set; }
+    public Data(List<Shape> shapes, double r, Color color)
     {
         Shapes = shapes;
         R = r;
+        Color = color;
     }
 }
 
@@ -52,7 +55,7 @@ public abstract class FileSaver
 {
     public static void SaveFile(CustomControl customControl, string filename)
     {
-        Data data = new Data(customControl.Shapes, Shape.R);
+        Data data = new Data(customControl.Shapes, Shape.R, Shape.color);
         string json = JsonConvert.SerializeObject(data);
         File.WriteAllText(filename, json);
         Console.WriteLine(json);
@@ -66,5 +69,6 @@ public abstract class FileSaver
         Debug.Assert(data != null, nameof(data) + " != null");
         customControl.Shapes = data.Shapes;
         Shape.R = data.R;
+        Shape.color = data.Color;
     }
 }

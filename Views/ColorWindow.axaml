@@ -1,0 +1,14 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="500"
+        Width="500"
+        Height="500"
+        x:Class="Polygons.Views.ColorWindow"
+        Title="ColorWindow">
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+        <ColorView x:Name="Picker" IsAccentColorsVisible="False" IsAlphaEnabled="False" IsAlphaVisible="False" Margin="10"></ColorView>
+        <Button Click='Button_OnClick' HorizontalAlignment="Center">OK</Button>
+    </StackPanel>
+</Window>

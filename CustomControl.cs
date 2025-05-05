@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Polygons.Models;
@@ -537,5 +536,10 @@ public class CustomControl : UserControl
     {
         Shape.R = e.Radius;
         InvalidateVisual();
+    }
+
+    public void UpdateColor(Color color)
+    {
+        Shape.color = color;
     }
 }
