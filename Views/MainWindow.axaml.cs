@@ -2,11 +2,14 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
+using System.Timers;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.Fonts;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using Polygons.Models;
 using Color = Avalonia.Media.Color;
 
@@ -16,6 +19,7 @@ public partial class MainWindow : Window
 {
     private SliderWindow? _sliderWindow;
     private string? _filename;
+    private readonly Timer _timer;
 
     public MainWindow()
     {
@@ -24,6 +28,10 @@ public partial class MainWindow : Window
         Shapes.SelectedIndex = 1;
         Algorithms.ItemsSource = new[] { "By definition", "Jarvis" };
         Algorithms.SelectedIndex = 0;
+        _timer = new Timer(200);
+        _timer.Elapsed += TimerTick;
+        _timer.Enabled = false;
+        _timer.AutoReset = true;
     }
 
     private void OnPointerPressed(object sender, PointerPressedEventArgs e)
@@ -185,6 +193,7 @@ public partial class MainWindow : Window
                     return;
             }
         }
+
         CloseOther();
         customControl!.Shapes = [];
         Shape.R = 35;
@@ -300,7 +309,7 @@ public partial class MainWindow : Window
     {
         _sliderWindow?.Close();
     }
-    
+
     private static FilePickerFileType Json { get; } = new("JSON")
     {
         Patterns = ["*.json"],
@@ -316,5 +325,21 @@ public partial class MainWindow : Window
         if (color == Color.FromUInt32(0)) return;
         CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
         customControl!.UpdateColor(color);
+    }
+
+    private void TimerTick(object? sender, ElapsedEventArgs e)
+    {
+        if (!_timer.Enabled) return;
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
+            customControl!.MoveShapes();
+            return Task.CompletedTask;
+        });
+    }
+
+    private void TimerEnabled_OnClick(object? sender, RoutedEventArgs e)
+    {
+        _timer.Enabled = !_timer.Enabled;
     }
 }

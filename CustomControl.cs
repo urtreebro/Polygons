@@ -22,7 +22,7 @@ public class CustomControl : UserControl
         set => _shapes = value;
     }
 
-    public bool IsChanged { get; set; } = false;
+    public bool IsChanged { get; set; }
 
     public override void Render(DrawingContext context)
     {
@@ -541,5 +541,17 @@ public class CustomControl : UserControl
     public void UpdateColor(Color color)
     {
         Shape.color = color;
+    }
+
+    public void MoveShapes()
+    {
+        var rnd = new Random();
+        foreach (var shape in _shapes)
+        {
+            shape.X += rnd.Next(-10, 10);
+            shape.Y += rnd.Next(-10, 10);
+        }
+        RemoveShapesInsideHull();
+        InvalidateVisual();
     }
 }

@@ -41,6 +41,14 @@
                 <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickChangeRadius">Change Radius</Button>
                 <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickChangeColor">Change Color</Button>
             </MenuItem>
+            <MenuItem Header="Play">
+                <ToggleButton x:Name="TimerEnabled" Click="TimerEnabled_OnClick">
+                    <Panel>
+                        <TextBlock Classes="start">Play</TextBlock>
+                        <TextBlock Classes="stop">Stop</TextBlock>
+                    </Panel>
+                </ToggleButton>
+            </MenuItem>
             <MenuItem Header="Test">
                 <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickParallel">Parallel</Button>
                 <Button Theme="{StaticResource MenuButton}" Click="Button_OnClickSerial">Serial</Button>
@@ -49,5 +57,39 @@
         <Polygons:CustomControl Name="MyCustomControl"></Polygons:CustomControl>
     </DockPanel>
 
-
+<Window.Styles>
+    <Style Selector="ToggleButton TextBlock.start">
+        <Setter Property="IsVisible" Value="True"/>
+        <Setter Property="Foreground" Value="White"></Setter>
+    </Style>
+    <Style Selector="ToggleButton TextBlock.start">
+        <Setter Property="IsVisible" Value="True"/>
+        <Setter Property="Foreground" Value="White"></Setter>
+    </Style>
+    <Style Selector="ToggleButton:checked TextBlock.start">
+        <Setter Property="IsVisible" Value="False"/>
+    </Style>
+    <Style Selector="ToggleButton TextBlock.stop">
+        <Setter Property="IsVisible" Value="False"/>
+    </Style>
+    <Style Selector="ToggleButton:checked TextBlock.stop">
+        <Setter Property="IsVisible" Value="True"/>
+    </Style>
+    <Style Selector="ToggleButton">
+        <Setter Property="Background" Value="LimeGreen"></Setter>
+    </Style>
+    <Style Selector="ToggleButton:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="ForestGreen"></Setter>
+    </Style>
+    <Style Selector="ToggleButton:checked /template/ ContentPresenter">
+        <Setter Property="Background" Value="Red"></Setter>
+    </Style>
+    <Style Selector="ToggleButton:checked">
+        <Style Selector="^:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Firebrick"></Setter>
+        </Style>
+    </Style>
+    
+    
+</Window.Styles>
 </Window>

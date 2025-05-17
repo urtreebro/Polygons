@@ -10,7 +10,8 @@
 - [x] Add several convex hull algorithms ✅
 - [x] Drag and drop for a convex hull ✅
 - [x] Add comparison charts ✅
-- [ ] Change figures' color
+- [x] Change figures' color ✅
 - [x] Change figures' radius ✅
 - [x] Save and load files ✅
+- [x] Make figures' dynamic ✅
 - [ ] Undo and redo

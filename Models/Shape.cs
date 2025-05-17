@@ -17,8 +17,6 @@ public abstract class Shape
     public bool IsMoving { get; set; }
 
     public abstract bool IsInside(double nx, double ny);
-
-    public Shape() {}
     
     protected Shape(double x = 0, double y = 0)
     {
@@ -31,15 +29,6 @@ public abstract class Shape
         R = 35;
         color = Colors.Orange;
     }
-
-    // [JsonConstructor]
-    // protected Shape(bool IsInConvexHull, bool IsMoving, double X, double Y)
-    // {
-    //     this.IsInConvexHull = IsInConvexHull;
-    //     this.IsMoving = IsMoving;
-    //     this.X = X;
-    //     this.Y = Y;
-    // }
 
     public double X
     {
