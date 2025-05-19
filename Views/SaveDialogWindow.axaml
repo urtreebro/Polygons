@@ -7,7 +7,7 @@
         Height="150"
         WindowStartupLocation="CenterOwner"
         x:Class="Polygons.Views.SaveDialogWindow"
-        Title="SaveDialogWindow">
+        Title="">
     <StackPanel>
         <TextBlock HorizontalAlignment="Center" Margin="20">Save changes?</TextBlock>
         <WrapPanel HorizontalAlignment="Center">

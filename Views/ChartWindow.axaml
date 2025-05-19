@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Polygons="clr-namespace:Polygons"
+        Icon="/Assets/avalonia-logo.ico"
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
         Width="600" Height="600"
         x:Class="Polygons.Views.ChartWindow"

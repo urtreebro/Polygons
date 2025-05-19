@@ -17,7 +17,7 @@ public abstract class Shape
     public bool IsMoving { get; set; }
 
     public abstract bool IsInside(double nx, double ny);
-    
+
     protected Shape(double x = 0, double y = 0)
     {
         this.x = x;
@@ -41,6 +41,10 @@ public abstract class Shape
         get => y;
         set => y = value;
     }
+
+    public double InitialX { get; set; }
+    
+    public double InitialY { get; set; }
 
     public abstract void Draw(DrawingContext context);
 }

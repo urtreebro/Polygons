@@ -26,6 +26,12 @@
                 <Button Theme="{StaticResource MenuButton}" Click="Button_SaveAs">Save As...</Button>
                 <Button Theme="{StaticResource MenuButton}" Click="Button_Exit">Exit</Button>
             </MenuItem>
+            <Button x:Name="UndoButton" Width="30" Margin="-10" Background="White" Click="UndoButton_OnClick" HotKey="Ctrl+z">
+                <Image Source="../Assets/undo_arrow.png"></Image>
+            </Button>
+            <Button Width="30" Margin="-10" Background="White" Click="RedoButton_OnClick" HotKey="Ctrl+Shift+z">
+                <Image Source="../Assets/redo_arrow.png"></Image>
+            </Button>
             <MenuItem Header="Figure type">
                 <ListBox x:Name="Shapes" SelectionChanged="Shapes_OnSelectionChanged"></ListBox>
             </MenuItem>
@@ -57,39 +63,39 @@
         <Polygons:CustomControl Name="MyCustomControl"></Polygons:CustomControl>
     </DockPanel>
 
-<Window.Styles>
-    <Style Selector="ToggleButton TextBlock.start">
-        <Setter Property="IsVisible" Value="True"/>
-        <Setter Property="Foreground" Value="White"></Setter>
-    </Style>
-    <Style Selector="ToggleButton TextBlock.start">
-        <Setter Property="IsVisible" Value="True"/>
-        <Setter Property="Foreground" Value="White"></Setter>
-    </Style>
-    <Style Selector="ToggleButton:checked TextBlock.start">
-        <Setter Property="IsVisible" Value="False"/>
-    </Style>
-    <Style Selector="ToggleButton TextBlock.stop">
-        <Setter Property="IsVisible" Value="False"/>
-    </Style>
-    <Style Selector="ToggleButton:checked TextBlock.stop">
-        <Setter Property="IsVisible" Value="True"/>
-    </Style>
-    <Style Selector="ToggleButton">
-        <Setter Property="Background" Value="LimeGreen"></Setter>
-    </Style>
-    <Style Selector="ToggleButton:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="ForestGreen"></Setter>
-    </Style>
-    <Style Selector="ToggleButton:checked /template/ ContentPresenter">
-        <Setter Property="Background" Value="Red"></Setter>
-    </Style>
-    <Style Selector="ToggleButton:checked">
-        <Style Selector="^:pointerover /template/ ContentPresenter">
-            <Setter Property="Background" Value="Firebrick"></Setter>
+    <Window.Styles>
+        <Style Selector="ToggleButton TextBlock.start">
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="Foreground" Value="White"></Setter>
         </Style>
-    </Style>
-    
-    
-</Window.Styles>
+        <Style Selector="ToggleButton TextBlock.start">
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="Foreground" Value="White"></Setter>
+        </Style>
+        <Style Selector="ToggleButton:checked TextBlock.start">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="ToggleButton TextBlock.stop">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="ToggleButton:checked TextBlock.stop">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="ToggleButton">
+            <Setter Property="Background" Value="LimeGreen"></Setter>
+        </Style>
+        <Style Selector="ToggleButton:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="ForestGreen"></Setter>
+        </Style>
+        <Style Selector="ToggleButton:checked /template/ ContentPresenter">
+            <Setter Property="Background" Value="Red"></Setter>
+        </Style>
+        <Style Selector="ToggleButton:checked">
+            <Style Selector="^:pointerover /template/ ContentPresenter">
+                <Setter Property="Background" Value="Firebrick"></Setter>
+            </Style>
+        </Style>
+
+
+    </Window.Styles>
 </Window>

@@ -2,13 +2,49 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:polygons="clr-namespace:Polygons"
+        Icon="/Assets/avalonia-logo.ico"
         mc:Ignorable="d"
         Width="400"
         Height="100"
         x:Class="Polygons.Views.SliderWindow"
         Title="SliderWindow">
     <StackPanel Margin="20">
-        <TextBlock Text="{Binding #Slider.Value}" HorizontalAlignment="Center" />
-        <Slider x:Name="Slider" Minimum="10" Maximum="80" ValueChanged="RangeBase_OnValueChanged" />
+        <TextBlock Text="{Binding #RadiusSlider.Value}" HorizontalAlignment="Center" />
+        <polygons:RadiusSlider x:Name="RadiusSlider" Minimum="10" Maximum="80" Height="30"
+                               ValueChanged="RadiusSlider_OnValueChanged" />
     </StackPanel>
+    <Window.Styles>
+        <Style Selector="polygons|RadiusSlider">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Grid Height="2" Background="DarkGray">
+                        <Track Name="PART_Track"
+                               Width="{TemplateBinding Width}"
+                               Height="10"
+                               VerticalAlignment="Center"
+                               Minimum="{TemplateBinding Minimum}"
+                               Maximum="{TemplateBinding Maximum}"
+                               Value="{TemplateBinding Value}"
+                               Orientation="Horizontal">
+                            <Track.Thumb>
+                                <Thumb Width="20" Height="20">
+                                    <Thumb.Template>
+                                        <ControlTemplate>
+                                            <Border Background="Purple"
+                                                    CornerRadius="10"
+                                                    BorderBrush="Purple"
+                                                    BorderThickness="2"
+                                                    Width="{TemplateBinding Width}"
+                                                    Height="{TemplateBinding Height}" />
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+    </Window.Styles>
 </Window>

@@ -32,6 +32,8 @@ public partial class MainWindow : Window
         _timer.Elapsed += TimerTick;
         _timer.Enabled = false;
         _timer.AutoReset = true;
+        CustomControl? customControl = this.Find<CustomControl>("MyCustomControl");
+        Action.MyCustomControl = customControl!;
     }
 
     private void OnPointerPressed(object sender, PointerPressedEventArgs e)
@@ -341,5 +343,15 @@ public partial class MainWindow : Window
     private void TimerEnabled_OnClick(object? sender, RoutedEventArgs e)
     {
         _timer.Enabled = !_timer.Enabled;
+    }
+
+    private void UndoButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Action.UndoAction();
+    }
+
+    private void RedoButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        Action.RedoAction();
     }
 }

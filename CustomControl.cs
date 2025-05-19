@@ -51,6 +51,8 @@ public class CustomControl : UserControl
         IsChanged = true;
         foreach (var shape in _shapes.Where(shape => shape.IsInside(newX, newY)))
         {
+            shape.InitialX = shape.X;
+            shape.InitialY = shape.Y;
             _prevX = newX;
             _prevY = newY;
             shape.IsMoving = true;
@@ -72,6 +74,10 @@ public class CustomControl : UserControl
                     break;
             }
 
+            var actions = new List<Action> { new AddShape(_shapes.Last()) };
+
+            Console.WriteLine();
+
             if (_shapes.Count >= 3)
             {
                 switch (_algorithmType)
@@ -88,20 +94,31 @@ public class CustomControl : UserControl
                 if (!_shapes.Last().IsInConvexHull)
                 {
                     drag = true;
+                    actions.Add(new RemoveShape(_shapes.Last()));
                     _shapes.Remove(_shapes.Last());
                     foreach (var shape in _shapes)
                     {
                         shape.IsMoving = true;
+                        shape.InitialX = shape.X;
+                        shape.InitialY = shape.Y;
                     }
 
                     _prevX = newX;
                     _prevY = newY;
                 }
 
+
                 if (!drag)
                 {
+                    actions.AddRange(_shapes.Where(shape => !shape.IsInConvexHull)
+                        .Select(shape => new RemoveShape(shape)).Cast<Action>());
                     RemoveShapesInsideHull();
                 }
+            }
+
+            if (actions.Count != 0)
+            {
+                Action.Add(new Combination(actions));
             }
         }
 
@@ -114,6 +131,7 @@ public class CustomControl : UserControl
         {
             _prevX = newX;
             _prevY = newY;
+            Action.Add(new RemoveShape(shape));
             _shapes.Remove(shape);
             IsChanged = true;
             break;
@@ -137,15 +155,25 @@ public class CustomControl : UserControl
 
     public void Release(int newX, int newY)
     {
+        var actions = new List<Action>();
         foreach (var shape in _shapes.Where(shape => shape.IsMoving))
         {
             shape.X += newX - _prevX;
             shape.Y += newY - _prevY;
+            actions.Add(new MoveShape(shape, shape.InitialX, shape.InitialY, shape.X, shape.Y));
             shape.IsMoving = false;
         }
 
         _prevX = newX;
         _prevY = newY;
+
+        actions.AddRange(_shapes.Where(shape => !shape.IsInConvexHull).Select(shape => new RemoveShape(shape))
+            .Cast<Action>());
+        if (actions.Count != 0)
+        {
+            Action.Add(new Combination(actions));
+        }
+
         RemoveShapesInsideHull();
         InvalidateVisual();
     }
@@ -491,6 +519,7 @@ public class CustomControl : UserControl
             {
                 UpdateConvexHullJarvis(ref shapes);
             }
+
             timer.Start();
             UpdateConvexHullJarvis(ref shapes);
             timer.Stop();
@@ -540,6 +569,7 @@ public class CustomControl : UserControl
 
     public void UpdateColor(Color color)
     {
+        Action.Add(new ChangeColor(Shape.color, color));
         Shape.color = color;
     }
 
@@ -551,6 +581,7 @@ public class CustomControl : UserControl
             shape.X += rnd.Next(-10, 10);
             shape.Y += rnd.Next(-10, 10);
         }
+
         RemoveShapesInsideHull();
         InvalidateVisual();
     }
