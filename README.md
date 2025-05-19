@@ -14,4 +14,4 @@
 - [x] Change figures' radius ✅
 - [x] Save and load files ✅
 - [x] Make figures' dynamic ✅
-- [ ] Undo and redo
+- [x] Undo and redo ✅
