@@ -76,8 +76,6 @@ public class CustomControl : UserControl
 
             var actions = new List<Action> { new AddShape(_shapes.Last()) };
 
-            Console.WriteLine();
-
             if (_shapes.Count >= 3)
             {
                 switch (_algorithmType)
@@ -94,7 +92,8 @@ public class CustomControl : UserControl
                 if (!_shapes.Last().IsInConvexHull)
                 {
                     drag = true;
-                    actions.Add(new RemoveShape(_shapes.Last()));
+                    //actions.Add(new RemoveShape(_shapes.Last()));
+                    actions.Clear();
                     _shapes.Remove(_shapes.Last());
                     foreach (var shape in _shapes)
                     {
@@ -111,7 +110,7 @@ public class CustomControl : UserControl
                 if (!drag)
                 {
                     actions.AddRange(_shapes.Where(shape => !shape.IsInConvexHull)
-                        .Select(shape => new RemoveShape(shape)).Cast<Action>());
+                        .Select(shape => new RemoveShape(shape)));
                     RemoveShapesInsideHull();
                 }
             }
@@ -160,15 +159,18 @@ public class CustomControl : UserControl
         {
             shape.X += newX - _prevX;
             shape.Y += newY - _prevY;
-            actions.Add(new MoveShape(shape, shape.InitialX, shape.InitialY, shape.X, shape.Y));
+            if (Math.Abs(shape.InitialX - shape.X) > 1e-6)
+            {
+                actions.Add(new MoveShape(shape, shape.InitialX, shape.InitialY, shape.X, shape.Y));
+            }
+
             shape.IsMoving = false;
         }
 
         _prevX = newX;
         _prevY = newY;
 
-        actions.AddRange(_shapes.Where(shape => !shape.IsInConvexHull).Select(shape => new RemoveShape(shape))
-            .Cast<Action>());
+        actions.AddRange(_shapes.Where(shape => !shape.IsInConvexHull).Select(shape => new RemoveShape(shape)));
         if (actions.Count != 0)
         {
             Action.Add(new Combination(actions));

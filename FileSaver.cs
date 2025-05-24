@@ -58,7 +58,6 @@ public abstract class FileSaver
         Data data = new Data(customControl.Shapes, Shape.R, Shape.color);
         string json = JsonConvert.SerializeObject(data);
         File.WriteAllText(filename, json);
-        Console.WriteLine(json);
     }
 
     public static void OpenFile(CustomControl customControl, string json)

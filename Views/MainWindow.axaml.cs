@@ -262,7 +262,7 @@ public partial class MainWindow : Window
         var dialog = new SaveDialogWindow();
 
         var res = await dialog.ShowDialog<string>(this);
-        Console.WriteLine(res);
+
         switch (res)
         {
             case "Yes":
